@@ -18,6 +18,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.json({ message: "Hello World!" });
+});
+
 app.post("/api/update", (req, res) => {
   latestState = req.body;
   // console.log("Update dari ESP:", latestState);
