@@ -1,49 +1,46 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const axios = require("axios");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
+// === State Storage ===
 let latestState = {};
+let latestControl = {};
 
-// cors
-app.use(
-  cors({
-    origin: "*",
-    methods: ["POST", "PATCH", "DELETE"],
-  })
-);
-
+// === Root Test ===
 app.get("/", (req, res) => {
-  res.json({ message: "Hello World!" });
+  res.json({ message: "ESP Backend API running." });
 });
 
+// === ESP Push Status ===
 app.post("/api/update", (req, res) => {
   latestState = req.body;
-  // console.log("Update dari ESP:", latestState);
+  console.log("[ESP Update]", latestState);
   res.sendStatus(200);
 });
 
+// === Frontend Get Status ===
 app.get("/api/status", (req, res) => {
   res.json(latestState);
-  console.log(latestState);
 });
 
-app.post("/api/control", async (req, res) => {
-  console.log(req.body);
-  try {
-    const response = await axios.post(`${process.env.ESP_HOST}/set`, req.body); // IP ESP
-    res.json({ success: true, result: response.data });
-  } catch (e) {
-    console.error(e.message);
-    res.status(500).json({ success: false });
-  }
+// === Frontend Send Control Command ===
+app.post("/api/control", (req, res) => {
+  latestControl = req.body;
+  console.log("[Control Update]", latestControl);
+  res.json({ success: true, message: "Control command updated." });
 });
 
+// === ESP Poll Control Command ===
+app.get("/api/control", (req, res) => {
+  res.json(latestControl);
+});
+
+// === Start Server ===
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`🚀 ESP Backend API running at http://localhost:${port}`);
 });
