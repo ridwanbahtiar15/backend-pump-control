@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -11,7 +11,7 @@ app.use(express.json());
 let latestState = {};
 let latestControl = {};
 
-// === Root Test ===
+// === Root Test ===g
 app.get("/", (req, res) => {
   res.json({ message: "ESP Backend API running." });
 });
