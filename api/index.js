@@ -36,7 +36,7 @@ app.get("/api/status", (req, res) => {
 app.post("/api/control", async (req, res) => {
   console.log(req.body);
   try {
-    const response = await axios.post(`${process.env.ESP_HOST}/set`, req.body); // IP ESP
+    const response = await axios.post("192.168.0.105/set", req.body); // IP ESP
     res.json({ success: true, result: response.data });
   } catch (e) {
     console.error(e.message);
